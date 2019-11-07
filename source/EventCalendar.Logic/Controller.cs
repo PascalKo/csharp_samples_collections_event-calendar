@@ -10,7 +10,7 @@ namespace EventCalendar.Logic
     public class Controller
     {
         private readonly ICollection<Event> _events;
-        public int EventsCount { get { throw new NotImplementedException();} }
+        public int EventsCount => _events.Count;
 
         public Controller()
         {
@@ -31,7 +31,27 @@ namespace EventCalendar.Logic
         /// <returns>Wurde die Veranstaltung angelegt</returns>
         public bool CreateEvent(Person invitor, string title, DateTime dateTime, int maxParticipators = 0)
         {
-            throw new NotImplementedException();
+
+            bool isCreated = false;
+            if (title == null || title.Length < 1 || invitor == null || DateTime.Now > dateTime || maxParticipators < 0|| GetEvent(title)!=null)
+            {
+                return isCreated;
+            }
+            else 
+            {
+                if (maxParticipators == 0)
+                {
+                    Event newEvent = new Event(invitor, title, dateTime);
+                    _events.Add(newEvent);
+                }
+                else
+                {
+                    Event newEvent = new ClosedEvent(invitor, title, dateTime, maxParticipators);
+                    _events.Add(newEvent);
+                }
+                isCreated = true;
+            }
+            return isCreated;
         }
 
 
@@ -42,7 +62,15 @@ namespace EventCalendar.Logic
         /// <returns>Event oder null, falls es keine Veranstaltung mit dem Titel gibt</returns>
         public Event GetEvent(string title)
         {
-            throw new NotImplementedException();
+            foreach (Event item in _events)
+            {
+                if (item.Title.Equals(title))
+                {
+                    return item;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -54,7 +82,12 @@ namespace EventCalendar.Logic
         /// <returns>War die Registrierung erfolgreich?</returns>
         public bool RegisterPersonForEvent(Person person, Event ev)
         {
-            throw new NotImplementedException();
+            if(ev == null || person == null)
+            {
+                return false;
+            }
+
+            return ev.AddPerson(person);
         }
 
         /// <summary>
@@ -65,7 +98,12 @@ namespace EventCalendar.Logic
         /// <returns>War die Abmeldung erfolgreich?</returns>
         public bool UnregisterPersonForEvent(Person person, Event ev)
         {
-            throw new NotImplementedException();
+            if (ev == null || person == null) ;
+            {
+                return false;
+            }
+
+            return ev.RemovePerson(person);
         }
 
         /// <summary>
@@ -97,7 +135,7 @@ namespace EventCalendar.Logic
         /// <returns>Anzahl oder 0 im Fehlerfall</returns>
         public int CountEventsForPerson(Person participator)
         {
-            throw new NotImplementedException();
+            return GetEventsForPerson(participator).Count;
         }
 
     }
