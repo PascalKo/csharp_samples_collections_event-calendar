@@ -98,7 +98,7 @@ namespace EventCalendar.Logic
         /// <returns>War die Abmeldung erfolgreich?</returns>
         public bool UnregisterPersonForEvent(Person person, Event ev)
         {
-            if (ev == null || person == null) ;
+            if (ev == null || person == null) 
             {
                 return false;
             }
